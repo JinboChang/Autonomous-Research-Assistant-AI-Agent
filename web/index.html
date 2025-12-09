@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autonomous Research Assistant</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f7f9fc; }
+    .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+    h1 { margin-bottom: 12px; }
+    #chat { background: #fff; border: 1px solid #e0e6ed; border-radius: 8px; padding: 16px; height: 60vh; overflow-y: auto; }
+    .msg { margin-bottom: 16px; }
+    .user { color: #0b5fff; font-weight: 600; }
+    .bot { color: #1c1f23; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #f1f3f5; padding: 12px; border-radius: 6px; }
+    #form { display: flex; gap: 8px; margin-top: 12px; }
+    #question { flex: 1; padding: 10px; font-size: 1rem; }
+    button { padding: 10px 16px; font-size: 1rem; cursor: pointer; background: #0b5fff; color: #fff; border: none; border-radius: 6px; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    #status { margin-top: 8px; color: #555; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Autonomous Research Assistant</h1>
+    <div id="chat"></div>
+    <form id="form">
+      <input id="question" type="text" placeholder="Enter your research question..." required />
+      <button type="submit">Send</button>
+    </form>
+    <div id="status"></div>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

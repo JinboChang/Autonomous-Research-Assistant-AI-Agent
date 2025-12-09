@@ -1,0 +1,11 @@
+requests
+httpx
+sentence-transformers
+faiss-cpu
+chromadb
+pdfminer.six
+openai
+numpy
+fastapi
+uvicorn
+python-dotenv
