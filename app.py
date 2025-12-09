@@ -15,6 +15,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from autonomous_research_assistant.main import run as run_agent
+try:
+    from lc_agent import run_langchain
+except Exception:
+    run_langchain = None
 
 
 # Load environment variables from .env if present.
@@ -41,7 +45,11 @@ def run(query: Query) -> dict:
     """
     Execute the agent on the provided question and return the report.
     """
-    report = run_agent(query.question)
+    # Prefer LangChain wrapper if available; fallback to classic.
+    if run_langchain:
+        report = run_langchain(query.question)
+    else:
+        report = run_agent(query.question)
     return {"report": report, "format": "md"}
 
 

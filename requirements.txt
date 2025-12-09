@@ -9,3 +9,6 @@ numpy
 fastapi
 uvicorn
 python-dotenv
+langchain
+langchain-openai
+langchain-community

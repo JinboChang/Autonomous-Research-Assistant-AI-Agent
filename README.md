@@ -25,15 +25,15 @@ pip install -r requirements.txt
 - Do **not** include quotes. The server loads `.env` automatically via `python-dotenv`.
 
 ## Running
-- CLI (one-off):
+- CLI (classic pipeline one-off):
   ```bash
   python -c "from autonomous_research_assistant.main import run; print(run('graph neural networks for molecules'))"
   ```
-- API + web UI:
+- API + web UI (LangChain-first by default):
   ```bash
   uvicorn app:app --reload --port 8000
   ```
-  Then open http://127.0.0.1:8000 (chat UI). The web client posts to `/run`.
+  Then open http://127.0.0.1:8000 (chat UI). The `/run` endpoint uses the LangChain pipeline in `lc_agent.py`; if LangChain import fails it falls back to the classic pipeline.
 
 ## Configuration (autonomous_research_assistant/config.py)
 - `llm_provider`: `"openai"` or `"stub"`.
@@ -44,15 +44,15 @@ pip install -r requirements.txt
 - `arxiv_enabled`: toggle ArXiv search.
 - `output_format`: `"md"` or `"json"`.
 
-## How it works (pipeline)
-1. Planner: LLM parses intent and generates query variants/filters.
-2. Search: ArXiv + Semantic Scholar (HTTP) → merge/dedupe results.
-3. Ingest: Download PDF (if available) else use abstract; chunk text.
-4. Embed & store: sentence-transformers → FAISS/Chroma (fallback to memory).
-5. Summarize: LLM per paper (method/findings/limitations/citation).
-6. Rerank: similarity search on the user question → top-k evidence.
-7. Synthesize: LLM composes structured review; citations block appended deterministically.
-8. Self-check: simple citation presence check.
+## How it works (LangChain pipeline)
+1. Planner: LLM generates 1?2 search queries.
+2. Search: ArXiv + Semantic Scholar (HTTP) via LC tool ? merge/dedupe.
+3. Ingest: Download PDF if available (pdfminer), else abstract; chunk text.
+4. Embed & store: sentence-transformers (HF) ? FAISS retriever (fallback to hash + cosine if FAISS missing).
+5. Retrieve: similarity search on the question to select top-k chunks.
+6. Summarize: LLM per chunk ? evidence summaries.
+7. Synthesize: LLM composes structured review; citations appended.
+8. Fallback: classic pipeline retained if LC tool agent creation/import fails.
 
 ## Tuning for speed vs. fidelity
 - Faster/offline: `llm_provider="stub"`, `embed_backend="hash"`, `vector_store="memory"`, `arxiv_enabled=False`, smaller `max_results/top_k`, skip PDFs (use abstracts).
@@ -70,6 +70,6 @@ pytest autonomous_research_assistant/tests/test_workflow.py
 ```
 
 ## Notes
-- If FAISS/Chroma aren’t installed, the store falls back to in-memory (works but non-persistent).
+- If FAISS/Chroma aren't installed, the store falls back to in-memory (works but non-persistent).
 - PDF parsing uses pdfminer when a PDF is fetched; otherwise abstracts are used.
 - `[stubbed-response]` means the LLM call failed or `llm_provider="stub"` is set; ensure a valid `OPENAI_API_KEY` with quota.
