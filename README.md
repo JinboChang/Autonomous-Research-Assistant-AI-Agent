@@ -1,6 +1,11 @@
 # Autonomous Research Assistant
 
 An AI-powered literature review agent that searches ArXiv & Semantic Scholar, downloads/abstracts papers, embeds and reranks them, summarizes with an LLM, and produces a structured report with citations. Includes a FastAPI backend and a simple chat-style frontend.
+## Demo
+
+
+https://github.com/user-attachments/assets/9ad738e3-ac05-4fa3-b0d9-c95a095832d3
+
 
 ## Features
 - Query planning (rewrites + filters) via LLM (stub fallback for offline/dev).
